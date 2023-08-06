@@ -4,6 +4,7 @@ import Auth
 import Effect exposing (Effect)
 import Route exposing (Route)
 import Html
+import Layouts
 import Page exposing (Page)
 import Shared
 import View exposing (View)
@@ -17,7 +18,15 @@ page user shared route =
         , subscriptions = subscriptions
         , view = view
         }
+        |> Page.withLayout (toLayout user)
 
+
+toLayout : Auth.User -> Model -> Layouts.Layout Msg
+toLayout user model =
+    Layouts.Sidebar
+        { title = "Profile"
+        , user = user
+        }
 
 
 -- INIT
