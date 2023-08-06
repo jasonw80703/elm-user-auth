@@ -51,18 +51,31 @@ port sendToLocalStorage :
     -> Cmd msg
 
 
-saveUser : String -> Effect msg
-saveUser token =
+saveUser :
+    { token : String
+    , id : String
+    , name : String
+    , profileImageUrl : String
+    , email : String
+    }
+    -> Effect msg
+saveUser user =
     SendToLocalStorage
-        { key = "token"
-        , value = Encode.string token
+        { key = "user"
+        , value = Encode.object
+            [ ( "token", Encode.string user.token )
+            , ( "id", Encode.string user.id )
+            , ( "name", Encode.string user.name )
+            , ( "profileImageUrl", Encode.string user.profileImageUrl )
+            , ( "email", Encode.string user.email )
+            ]
         }
 
 
 clearUser : Effect msg
 clearUser =
     SendToLocalStorage
-        { key = "token"
+        { key = "user"
         , value = Encode.null
         }
 
@@ -214,9 +227,16 @@ toCmd options effect =
 -- SHARED
 
 
-signIn : { token : String } -> Effect msg
-signIn options =
-    SendSharedMsg (Shared.Msg.SignIn options)
+signIn :
+    { token : String
+    , id : String
+    , name : String
+    , profileImageUrl : String
+    , email : String
+    }
+    -> Effect msg
+signIn user =
+    SendSharedMsg (Shared.Msg.SignIn user)
 
 
 signOut : Effect msg
